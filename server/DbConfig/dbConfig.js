@@ -14,4 +14,13 @@ const connection = async () => {
   }
 };
 
-module.exports = { sequelize, connection };
+const syncModels = async () => {
+  try {
+    await sequelize.sync({ alter: true });
+    console.log("All models synced with the database");
+  } catch (error) {
+    console.error("Error syncing models:", error);
+  }
+};
+
+module.exports = { sequelize, connection, syncModels };
