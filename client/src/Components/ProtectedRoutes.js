@@ -42,7 +42,7 @@ const ProtectedRoutes = (props) => {
   return (
     <div className="h-screen w-screen bg-gray-100 p-2">
       {/* header */}
-      <div className="flex justify-between p-5 bg-primary rounded">
+      <div className="flex justify-between p-3 bg-primary rounded">
         <div className="flex items-center gap-1">
           <i className="ri-message-3-line text-2xl text-white"></i>
           <h1

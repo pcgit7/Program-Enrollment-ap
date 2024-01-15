@@ -11,14 +11,14 @@ const Home = () => {
 
   return (
     <div className="flex gap-20">
-      <div className="w-96">
+      <div className="w-1/4">
         <ProgramSearch searchKey={searchKey} setSearchKey={setSearchKey} />
         <ProgramList
           searchKey={searchKey}
           setProgram={setProgram}
         />
       </div>
-      <div>
+      <div className="w-1/2">
       <ProgramForm />
       </div>
     </div>
