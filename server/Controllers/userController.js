@@ -1,7 +1,7 @@
 const User = require("../Models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const Program = require('../Models/programModel');
+const Program = require("../Models/programModel");
 
 const UserRegister = async (req, res) => {
   try {
@@ -63,7 +63,7 @@ const UserLogin = async (req, res) => {
       });
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: user.email }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
     res.send({
@@ -79,10 +79,8 @@ const UserLogin = async (req, res) => {
   }
 };
 
-
-const AddProgram = async (req,res) => {
-  try 
-  {
+const AddProgram = async (req, res) => {
+  try {
     const newProgram = await Program.create(req.body);
     res.send({
       success: true,
@@ -91,10 +89,40 @@ const AddProgram = async (req,res) => {
     });
   } catch (error) {
     res.send({
-      success : false,
-      message : error.message
+      success: false,
+      message: error.message,
     });
   }
 };
 
-module.exports = { UserLogin ,UserRegister , AddProgram};
+const GetUserDetails = async (req, res) => {
+  try {
+    const user = await User.findOne({
+      email : req.body.email
+    });
+    
+    user.password = undefined;
+
+    const allPrograms = await Program.findAll({
+      where: {
+        userId: user.userId,
+      },
+    });
+
+    res.send({
+      success: true,
+      message: "User data fetched successfullly",
+      data: {
+        user,
+        allPrograms,
+      },
+    });
+  } catch (error) {
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = { UserLogin, UserRegister, AddProgram, GetUserDetails };
