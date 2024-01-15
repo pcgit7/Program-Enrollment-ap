@@ -5,17 +5,30 @@ const userSlice = createSlice({
     initialState : {
         user : null,
         allPrograms : [],
+        currentProgram : ''
     },
     reducers : {
         SetUser : (state,action) => {
-            return action.payload;
+            return {
+                ...state,
+                user : action.payload
+            };
         },
-        UpdateAllProgram : (state,action) => {
-            return action.payload;
+        SetAllProgram : (state,action) => {
+            return {
+                ...state,
+                allPrograms : action.payload
+            };
+        },
+        SetCurrentProgram : (state,action) => {
+            return {
+                ...state,
+                currentProgram : action.payload
+            };
         }
     }
 });
 
-export const { SetUser , UpdateAllProgram } = userSlice.actions;
+export const { SetUser , SetAllProgram ,SetCurrentProgram } = userSlice.actions;
 
 export default userSlice.reducer;

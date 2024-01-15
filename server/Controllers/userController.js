@@ -81,6 +81,12 @@ const UserLogin = async (req, res) => {
 
 const AddProgram = async (req, res) => {
   try {
+    const user = await User.findOne({
+      email : req.body.email
+    });
+    
+    req.body.userId = user.userId;
+
     const newProgram = await Program.create(req.body);
     res.send({
       success: true,
@@ -125,4 +131,27 @@ const GetUserDetails = async (req, res) => {
   }
 };
 
-module.exports = { UserLogin, UserRegister, AddProgram, GetUserDetails };
+
+const UpdateProgram = async (req,res) => {
+  try {
+    const {programId , ...updatedData} = req.body;
+    
+    const program = await Program.findByPk(programId);
+
+    program.set(updatedData);
+    await program.save();
+    res.send({
+      message : "Data Updated Successfully",
+      success : true,
+      data : program
+    });
+
+  } catch (error) {
+    res.send({
+      message : error.message,
+      success : false
+    });
+  }
+};
+
+module.exports = { UserLogin, UserRegister, AddProgram, GetUserDetails , UpdateProgram};

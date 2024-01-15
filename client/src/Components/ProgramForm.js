@@ -1,41 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { UpdateProgram } from "../ApiCalls/user";
+import { ShowLoader , HideLoader } from '../Redux/loaderSlice';
+import toast from "react-hot-toast";
 
-const ProgramForm = ({ data }) => {
-  const [formData, setFormData] = useState(data);
+const ProgramForm = () => {
 
+  const currentProgram = useSelector(state => state.userReducer.currentProgram);
+  const [formData, setFormData] = useState(currentProgram || '') ;
+  const dispatch = useDispatch();
+
+  const updateProgram = async () => {
+    try 
+    {
+      console.log(formData);
+      dispatch(ShowLoader());
+      const response = await UpdateProgram(formData);
+      dispatch(HideLoader());
+      if(response.success){
+        toast.success(response.message);
+      }
+
+      else{
+        toast.error(response.message);
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(HideLoader());
+      toast.error(error.message);
+    }
+  };
+
+  useEffect( () => {
+    setFormData(currentProgram);
+  },[currentProgram]);
+  
   const handleChange = (e) => {
     const { id, value } = e.target;
+
     setFormData((prevData) => ({
       ...prevData,
       [id]: value,
     }));
   };
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    console.log(formData);
-  };
+
   return (
     <div>
       <form className="w-full max-w-lg mx-auto mt-8">
         {/* row 1 */}
         <div className="flex flex-wrap -mx-3 mb-6">
-          <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="programName"
-            >
-              Program Name
-            </label>
-            <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="programName"
-              type="text"
-              placeholder="Enter program name"
-              value={formData.programName}
-              onChange={handleChange}
-            />
-          </div>
           <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
@@ -48,7 +62,7 @@ const ProgramForm = ({ data }) => {
               id="programPrice"
               type="text"
               placeholder="Enter price"
-              value={formData.programPrice}
+              value={formData?.price}
               onChange={handleChange}
             />
           </div>
@@ -59,13 +73,36 @@ const ProgramForm = ({ data }) => {
             >
               Domain
             </label>
-            <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="programDomain"
-              type="text"
-              placeholder="Enter domain"
-              value={formData.programDomain}
+            <select
+              className="block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              id="domain"
+              value={formData?.domain}
               onChange={handleChange}
+            >
+              <option value="" disabled>
+                Select a domain
+              </option>
+              <option value="Data">Data</option>
+              <option value="Finance">Finance</option>
+              <option value="Future Tech">Future Tech</option>
+              {/* Add more options as needed */}
+            </select>
+          </div>
+          <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="placementAssurance"
+            >
+              Placement Assurance
+            </label>
+            <input
+              type="checkbox"
+              id="placementAssurance"
+              checked={formData?.placementAssurance}
+              onChange={(e) => {
+                const { id, checked } = e.target;
+                handleChange({ target: { id, value: checked } });
+              }}
             />
           </div>
         </div>
@@ -73,8 +110,26 @@ const ProgramForm = ({ data }) => {
         {/* row 2 */}
         <div className="mb-6">
           <p className="text-lg font-semibold mb-4">Information</p>
+
           <div className="flex flex-wrap -mx-3 mb-6">
-            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+            <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="programName"
+              >
+                Program Name
+              </label>
+              <input
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                id="name"
+                type="text"
+                placeholder="Enter program name"
+                value={formData?.name}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="programType"
@@ -86,51 +141,51 @@ const ProgramForm = ({ data }) => {
                   <input
                     type="radio"
                     id="programType"
-                    value="certificate"
-                    checked={formData.programType === "certificate"}
+                    value="FT"
+                    checked={formData?.programType === "FT"}
                     onChange={handleChange}
                   />
-                  <span className="ml-2">Certificate</span>
+                  <span className="ml-2">FT</span>
                 </label>
                 <label>
                   <input
                     type="radio"
                     id="programType"
-                    value="diploma"
-                    checked={formData.programType === "diploma"}
+                    value="PT"
+                    checked={formData?.programType === "PT"}
                     onChange={handleChange}
                   />
-                  <span className="ml-2">Diploma</span>
+                  <span className="ml-2">PT</span>
                 </label>
               </div>
             </div>
-            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+            <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="registrationStatus"
               >
-                Registration Status
+                Registration Open
               </label>
               <div className="flex">
                 <label className="mr-4">
                   <input
                     type="radio"
-                    id="registrationStatus"
-                    value="open"
-                    checked={formData.registrationStatus === "open"}
+                    id="registrations"
+                    value="Yes"
+                    checked={formData?.registrations === "Yes"}
                     onChange={handleChange}
                   />
-                  <span className="ml-2">Open</span>
+                  <span className="ml-2">Yes</span>
                 </label>
                 <label>
                   <input
                     type="radio"
-                    id="registrationStatus"
-                    value="closed"
-                    checked={formData.registrationStatus === "closed"}
+                    id="registrations"
+                    value="No"
+                    checked={formData?.registrations === "No"}
                     onChange={handleChange}
                   />
-                  <span className="ml-2">Closed</span>
+                  <span className="ml-2">No</span>
                 </label>
               </div>
             </div>
@@ -151,25 +206,30 @@ const ProgramForm = ({ data }) => {
               id="universityName"
               type="text"
               placeholder="Enter university name"
-              value={formData.universityName}
+              value={formData?.universityName}
               onChange={handleChange}
             />
           </div>
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="certification"
+              htmlFor="certificateDiploma"
             >
-              Certification
+              Certificate or Diploma
             </label>
-            <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="certification"
-              type="text"
-              placeholder="Enter certification details"
-              value={formData.certification}
+            <select
+              className="block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              id="certificateDiploma"
+              value={formData?.certificateDiploma}
               onChange={handleChange}
-            />
+            >
+              <option value="" disabled>
+                Select a domain
+              </option>
+              <option value="Certificate">Certificate</option>
+              <option value="Diploma">Diploma</option>
+              {/* Add more options as needed */}
+            </select>
           </div>
         </div>
 
@@ -187,7 +247,7 @@ const ProgramForm = ({ data }) => {
               id="duration"
               type="text"
               placeholder="Enter duration of program"
-              value={formData.duration}
+              value={formData?.duration}
               onChange={handleChange}
             />
           </div>
@@ -200,10 +260,10 @@ const ProgramForm = ({ data }) => {
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="eligibility"
+              id="eligibilityCriteria"
               type="text"
               placeholder="Enter eligibility"
-              value={formData.eligibility}
+              value={formData?.eligibilityCriteria}
               onChange={handleChange}
             />
           </div>
@@ -216,26 +276,28 @@ const ProgramForm = ({ data }) => {
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="image"
+              id="imageUrl"
               type="text"
               placeholder="ImageURL"
-              value={formData.image}
+              value={formData?.imageUrl}
               onChange={handleChange}
             />
           </div>
         </div>
 
-        
         {/* Description */}
         <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="description"
+          >
             Description
           </label>
           <textarea
             className="resize-none appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
             id="description"
             placeholder="Enter program description"
-            value={formData.description}
+            value={formData?.description}
             onChange={handleChange}
           />
         </div>
@@ -245,7 +307,7 @@ const ProgramForm = ({ data }) => {
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={submitHandler}
+            onClick={updateProgram}
           >
             Submit
           </button>

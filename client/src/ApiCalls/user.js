@@ -25,8 +25,18 @@ export const LoginUser = async (data) => {
 export const GetUserDetails = async () => {
     try 
     {
-        const response = await axiosInstance.get('/api/user/get-all-programs');
+        const response = await axiosInstance.get(`${baseUrl}/api/user/get-all-user-programs`);
         return response.data;    
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const UpdateProgram = async (data) => {
+    try 
+    {
+        const response = await axiosInstance.post(`${baseUrl}/api/user/update-program`,data);
+        return response.data;
     } catch (error) {
         throw error;
     }
