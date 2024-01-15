@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const userSlice = createSlice({
+    name : "user",
     initialState : {
         user : null,
         allPrograms : [],
@@ -17,4 +18,4 @@ const userSlice = createSlice({
 
 export const { SetUser , UpdateAllProgram } = userSlice.actions;
 
-export default userSlice;
+export default userSlice.reducer;
