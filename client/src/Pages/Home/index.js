@@ -13,6 +13,7 @@ const Home = () => {
   const programId = useSelector((state) => state.userReducer.currentProgram?.programId);
   
   const dispatch = useDispatch();
+  const [program,setProgram] = useState({});
 
   const deleteProgram = async () => {
 
@@ -41,11 +42,12 @@ const Home = () => {
         <ProgramSearch searchKey={searchKey} setSearchKey={setSearchKey} />
         <ProgramList
           searchKey={searchKey}
-          
+          setProgram={setProgram}
+          program={program}
         />
       </div>
       <div className="w-1/2">
-      <ProgramForm deleteProgram={deleteProgram}/>
+      <ProgramForm deleteProgram={deleteProgram} program={program}/>
       </div>
     </div>
   );

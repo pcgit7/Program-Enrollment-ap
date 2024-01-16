@@ -1,28 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CreateProgram, UpdateProgram } from "../ApiCalls/user";
+import { UpdateProgram } from "../ApiCalls/user";
 import { ShowLoader , HideLoader } from '../Redux/loaderSlice';
 import toast from "react-hot-toast";
 
-const ProgramForm = ({deleteProgram }) => {
+const ProgramForm = ({deleteProgram ,program}) => {
 
   const currentProgram = useSelector(state => state.userReducer.currentProgram);
-  
-  const [formData, setFormData] = useState(currentProgram || {}) ;
+  const [formData, setFormData] = useState(program || '') ;
   const dispatch = useDispatch();
 
-  const updateCreateProgram = async () => {
+  const updateProgram = async () => {
     try 
     {
       dispatch(ShowLoader());
-      let response = '';
-      if(!currentProgram){
-        response = await CreateProgram(formData);
-      }
-      else{
-        response = await UpdateProgram(formData);
-      }
-      
+      const response = await UpdateProgram(formData);
       dispatch(HideLoader());
       if(response.success){
         toast.success(response.message);
@@ -39,8 +31,8 @@ const ProgramForm = ({deleteProgram }) => {
   };
 
   useEffect( () => {
-    setFormData(currentProgram);
-  },[currentProgram]);
+    setFormData(program);
+  },[program]);
   
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -54,37 +46,53 @@ const ProgramForm = ({deleteProgram }) => {
 
   return (
     <div>
-      <form className="w-full max-w-lg mx-auto">
+      <form className="w-[1000px] max-w-full mx-auto">
         {/* row 1 */}
         <h1 className="text-2xl font-bold mb-4">Confirm Program</h1>
-        <div className="flex flex-wrap -mx-3 mb-6">
-          <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+        <div className="flex -mx-3 mb-6">
+          
+          <div className="w-full md:w-1/3 px-4 mb-6 md:mb-0">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="programPrice"
             >
-              Price
+              <span className="text-red-500">*</span>Price
             </label>
             <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="price"
+              className="appearance-none block w-[300px] bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 "
+              id="programPrice"
               type="text"
               placeholder="Enter price"
               value={formData?.price || ''}
               onChange={handleChange}
             />
+
+            { /*<select
+              className="block w-[300px] bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              id="currency"
+              value={formData?.currency}
+              onChange={handleChange}
+            >
+              <option value="" disabled>
+                Select a currency
+              </option>
+              <option value="USD">USD</option>
+              <option value="INR">INR</option>
+              
+            </select>
+  */}
           </div>
-          <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+          <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0 ml-20">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="programDomain"
             >
-              Domain
+             <span className="text-red-500">*</span>Domain
             </label>
             <select
-              className="block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              className="block w-[300px] bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="domain"
-              value={formData?.domain || 'domain'}
+              value={formData?.domain}
               onChange={handleChange}
             >
               <option value="" disabled>
@@ -96,14 +104,8 @@ const ProgramForm = ({deleteProgram }) => {
               {/* Add more options as needed */}
             </select>
           </div>
-          <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="placementAssurance"
-            >
-              Placement Assurance
-            </label>
-            <input
+          <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0 flex mt-6 ml-20">
+          <input
               type="checkbox"
               id="placementAssurance"
               checked={formData?.placementAssurance}
@@ -112,6 +114,13 @@ const ProgramForm = ({deleteProgram }) => {
                 handleChange({ target: { id, value: checked } });
               }}
             />
+            <label
+              className="block text-gray-700 text-sm font-bold mt-2 ml-2"
+              htmlFor="placementAssurance"
+            >
+            Placement Assurance
+            </label>
+            
           </div>
         </div>
 
@@ -119,33 +128,33 @@ const ProgramForm = ({deleteProgram }) => {
         <div className="mb-6">
           <h1 className="text-xl font-bold mb-4">Information</h1>
 
-          <div className="flex flex-wrap -mx-3 mb-6">
+          <div className="flex -mx-3 mb-6">
             <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="programName"
               >
-                Program Name
+                <span className="text-red-500">*</span>Program Name
               </label>
               <input
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                className="appearance-none block w-[300px] bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="name"
                 type="text"
                 placeholder="Enter program name"
-                value={formData?.name}
+                value={formData?.name || ''}
                 onChange={handleChange}
               />
             </div>
 
-            <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+            <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0 ml-24">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="programType"
               >
-                Program Type
+                <span className="text-red-500">*</span>Program Type
               </label>
               <div className="flex">
-                <label className="mr-4">
+                <label className="mr-4 flex">
                   <input
                     type="radio"
                     id="programType"
@@ -153,9 +162,9 @@ const ProgramForm = ({deleteProgram }) => {
                     checked={formData?.programType === "FT"}
                     onChange={handleChange}
                   />
-                  <span className="ml-2">FT</span>
+                  <span className="ml-2 mt-2">FT</span>
                 </label>
-                <label>
+                <label className="flex ml-8">
                   <input
                     type="radio"
                     id="programType"
@@ -163,19 +172,19 @@ const ProgramForm = ({deleteProgram }) => {
                     checked={formData?.programType === "PT"}
                     onChange={handleChange}
                   />
-                  <span className="ml-2">PT</span>
+                  <span className="ml-2 mt-2">PT</span>
                 </label>
               </div>
             </div>
-            <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+            <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0 ml-28">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="registrationStatus"
               >
-                Registration Open
+                <span className="text-red-500">*</span>Registration Open
               </label>
               <div className="flex">
-                <label className="mr-4">
+                <label className="mr-4 flex">
                   <input
                     type="radio"
                     id="registrations"
@@ -183,9 +192,9 @@ const ProgramForm = ({deleteProgram }) => {
                     checked={formData?.registrations === "Yes"}
                     onChange={handleChange}
                   />
-                  <span className="ml-2">Yes</span>
+                  <span className="ml-2 mt-2">Yes</span>
                 </label>
-                <label>
+                <label className="flex ml-8">
                   <input
                     type="radio"
                     id="registrations"
@@ -193,7 +202,7 @@ const ProgramForm = ({deleteProgram }) => {
                     checked={formData?.registrations === "No"}
                     onChange={handleChange}
                   />
-                  <span className="ml-2">No</span>
+                  <span className="ml-2 mt-2">No</span>
                 </label>
               </div>
             </div>
@@ -207,7 +216,7 @@ const ProgramForm = ({deleteProgram }) => {
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="universityName"
             >
-              University Name
+              <span className="text-red-500">*</span>University Name
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -223,12 +232,12 @@ const ProgramForm = ({deleteProgram }) => {
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="certificateDiploma"
             >
-              Certificate or Diploma
+              <span className="text-red-500">*</span>Certificate or Diploma
             </label>
             <select
               className="block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="certificateDiploma"
-              value={formData?.certificateDiploma || 'select-domain'}
+              value={formData?.certificateDiploma || ''}
               onChange={handleChange}
             >
               <option value="" disabled>
@@ -248,7 +257,7 @@ const ProgramForm = ({deleteProgram }) => {
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="duration"
             >
-              Learning Duration
+              <span className="text-red-500">*</span>Learning Duration
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -264,7 +273,7 @@ const ProgramForm = ({deleteProgram }) => {
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="eligibility"
             >
-              Eligibility Criteria
+              <span className="text-red-500">*</span>Eligibility Criteria
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -280,7 +289,7 @@ const ProgramForm = ({deleteProgram }) => {
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="image"
             >
-              ImageURL
+              <span className="text-red-500">*</span>ImageURL
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -299,7 +308,7 @@ const ProgramForm = ({deleteProgram }) => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="description"
           >
-            Description
+            <span className="text-red-500">*</span>Description
           </label>
           <textarea
             className="resize-none appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -320,7 +329,7 @@ const ProgramForm = ({deleteProgram }) => {
 
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={updateCreateProgram}
+            onClick={updateProgram}
           >
             Save Program
           </button>
