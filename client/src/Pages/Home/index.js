@@ -10,7 +10,7 @@ import { DeleteProgram } from "../../ApiCalls/user";
 const Home = () => {
 
   const [searchKey, setSearchKey] = useState("");
-  const programId = useSelector((state) => state.userReducer.currentProgram?.programId);
+  //const programId = useSelector((state) => state.userReducer.currentProgram?.programId);
   
   const dispatch = useDispatch();
   const [program,setProgram] = useState({});
@@ -20,8 +20,8 @@ const Home = () => {
     try 
     {
       dispatch(ShowLoader());
-      
-      const response = await DeleteProgram(programId);
+      console.log(program.programId);
+      const response = await DeleteProgram(program.programId);
       dispatch(HideLoader());
       if(response.success){
         toast.success(response.message);
