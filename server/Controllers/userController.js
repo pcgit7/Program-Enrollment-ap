@@ -40,19 +40,21 @@ const UserRegister = async (req, res) => {
 
 const UserLogin = async (req, res) => {
   try {
+    console.log(req.body);
     const user = await User.findOne({
       where: {
         email: req.body.email
       },
-      attributes: { exclude: ['password'] } 
     });
 
+    
     if (!user) {
       return res.send({
         message: "User does not exits",
         success: false,
       });
     }
+  
     const validPassword = await bcrypt.compare(
       req.body.password,
       user.password
@@ -64,6 +66,7 @@ const UserLogin = async (req, res) => {
       });
     }
 
+    console.log(process.env.JWT_SECRET, user.email);
     const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
