@@ -4,7 +4,7 @@ import { UpdateProgram } from "../ApiCalls/user";
 import { ShowLoader , HideLoader } from '../Redux/loaderSlice';
 import toast from "react-hot-toast";
 
-const ProgramForm = () => {
+const ProgramForm = ({deleteProgram }) => {
 
   const currentProgram = useSelector(state => state.userReducer.currentProgram);
   const [formData, setFormData] = useState(currentProgram || '') ;
@@ -13,7 +13,6 @@ const ProgramForm = () => {
   const updateProgram = async () => {
     try 
     {
-      console.log(formData);
       dispatch(ShowLoader());
       const response = await UpdateProgram(formData);
       dispatch(HideLoader());
@@ -305,13 +304,18 @@ const ProgramForm = () => {
         </div>
 
         {/* submit button */}
-        <div className="flex justify-end">
+        <div className="flex justify-between">
+
+        <div className="bg-white hover:bg-blue-700 text-rose-700  py-2 px-4 rounded focus:outline-none focus:shadow-outline border-2 border-red-700">
+          <i class="ri-delete-bin-line"></i>
+          <button className="ml-1 font-bold" onClick = {deleteProgram}>Delete</button>
+          </div>
+
           <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={updateProgram}
           >
-            Submit
+            Save Program
           </button>
         </div>
       </form>

@@ -41,3 +41,13 @@ export const UpdateProgram = async (data) => {
         throw error;
     }
 };
+
+export const DeleteProgram = async (programId) => {
+    try 
+    {
+        const response = await axiosInstance.post(`${baseUrl}/api/user/delete-program`,{programId});
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};

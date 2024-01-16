@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { UserLogin , UserRegister , AddProgram , GetUserDetails, UpdateProgram} = require('../Controllers/userController');
+const { UserLogin , UserRegister , AddProgram , GetUserDetails, UpdateProgram , DeleteProgram} = require('../Controllers/userController');
 const  authMiddleware  = require('../Middleware/authMiddleware');
 
 //register new user
@@ -16,5 +16,8 @@ router.post('/add-program',authMiddleware,AddProgram);
 
 //update-program
 router.post('/update-program',UpdateProgram);
+
+//delete program
+router.post('/delete-program',DeleteProgram);
 
 module.exports = router;

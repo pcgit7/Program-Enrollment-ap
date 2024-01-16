@@ -154,4 +154,23 @@ const UpdateProgram = async (req,res) => {
   }
 };
 
-module.exports = { UserLogin, UserRegister, AddProgram, GetUserDetails , UpdateProgram};
+
+const DeleteProgram = async(req,res) => {
+  try {
+
+    const program = await Program.findByPk(req.body.programId);
+    await program.destroy();
+
+    res.send({
+      success : true,
+      message : "Program Delete Successfully"
+    });
+
+  } catch (error) {
+    res.send({
+      message : error.message,
+      success : false
+    });
+  }
+};
+module.exports = { UserLogin, UserRegister, AddProgram, GetUserDetails , UpdateProgram ,DeleteProgram};

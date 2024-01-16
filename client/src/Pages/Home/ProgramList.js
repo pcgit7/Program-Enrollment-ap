@@ -23,7 +23,6 @@ const ProgramList = ({searchKey,setProgram}) => {
   return (
     <div className="flex flex-col gap-3 mt-5 lg:w-96 xl:w-96 md:w-60 sm:w-60">
       <div
-            
             className={`shadow border p-5 rounded-2xl bg-white flex flex-col justify-between items-center cursor-pointer
             ${getIsSelectedProgramOrNot('empty') && "border-primary border-2"}`}
             onClick={() => dispatch(SetCurrentProgram(''))}
