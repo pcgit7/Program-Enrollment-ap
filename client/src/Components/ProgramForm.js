@@ -15,7 +15,7 @@ const ProgramForm = ({deleteProgram ,program}) => {
     {
       dispatch(ShowLoader());
       let response = '';
-      if(!currentProgram){
+      if(!program){
         response = await CreateProgram(formData);
       }
       else{
