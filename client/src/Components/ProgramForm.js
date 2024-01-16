@@ -1,20 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { UpdateProgram } from "../ApiCalls/user";
+import { CreateProgram, UpdateProgram } from "../ApiCalls/user";
 import { ShowLoader , HideLoader } from '../Redux/loaderSlice';
 import toast from "react-hot-toast";
 
 const ProgramForm = ({deleteProgram }) => {
 
   const currentProgram = useSelector(state => state.userReducer.currentProgram);
-  const [formData, setFormData] = useState(currentProgram || '') ;
+  
+  const [formData, setFormData] = useState(currentProgram || {}) ;
   const dispatch = useDispatch();
 
-  const updateProgram = async () => {
+  const updateCreateProgram = async () => {
     try 
     {
       dispatch(ShowLoader());
-      const response = await UpdateProgram(formData);
+      let response = '';
+      if(!currentProgram){
+        response = await CreateProgram(formData);
+      }
+      else{
+        response = await UpdateProgram(formData);
+      }
+      
       dispatch(HideLoader());
       if(response.success){
         toast.success(response.message);
@@ -50,7 +58,6 @@ const ProgramForm = ({deleteProgram }) => {
         {/* row 1 */}
         <h1 className="text-2xl font-bold mb-4">Confirm Program</h1>
         <div className="flex flex-wrap -mx-3 mb-6">
-          
           <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
@@ -60,10 +67,10 @@ const ProgramForm = ({deleteProgram }) => {
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="programPrice"
+              id="price"
               type="text"
               placeholder="Enter price"
-              value={formData?.price}
+              value={formData?.price || ''}
               onChange={handleChange}
             />
           </div>
@@ -77,7 +84,7 @@ const ProgramForm = ({deleteProgram }) => {
             <select
               className="block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="domain"
-              value={formData?.domain}
+              value={formData?.domain || 'domain'}
               onChange={handleChange}
             >
               <option value="" disabled>
@@ -207,7 +214,7 @@ const ProgramForm = ({deleteProgram }) => {
               id="universityName"
               type="text"
               placeholder="Enter university name"
-              value={formData?.universityName}
+              value={formData?.universityName || ''}
               onChange={handleChange}
             />
           </div>
@@ -221,7 +228,7 @@ const ProgramForm = ({deleteProgram }) => {
             <select
               className="block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="certificateDiploma"
-              value={formData?.certificateDiploma}
+              value={formData?.certificateDiploma || 'select-domain'}
               onChange={handleChange}
             >
               <option value="" disabled>
@@ -248,7 +255,7 @@ const ProgramForm = ({deleteProgram }) => {
               id="duration"
               type="text"
               placeholder="Enter duration of program"
-              value={formData?.duration}
+              value={formData?.duration || ''}
               onChange={handleChange}
             />
           </div>
@@ -264,7 +271,7 @@ const ProgramForm = ({deleteProgram }) => {
               id="eligibilityCriteria"
               type="text"
               placeholder="Enter eligibility"
-              value={formData?.eligibilityCriteria}
+              value={formData?.eligibilityCriteria || ''}
               onChange={handleChange}
             />
           </div>
@@ -280,7 +287,7 @@ const ProgramForm = ({deleteProgram }) => {
               id="imageUrl"
               type="text"
               placeholder="ImageURL"
-              value={formData?.imageUrl}
+              value={formData?.imageUrl || ''} 
               onChange={handleChange}
             />
           </div>
@@ -298,7 +305,7 @@ const ProgramForm = ({deleteProgram }) => {
             className="resize-none appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
             id="description"
             placeholder="Enter program description"
-            value={formData?.description}
+            value={formData?.description || ''}
             onChange={handleChange}
           />
         </div>
@@ -313,7 +320,7 @@ const ProgramForm = ({deleteProgram }) => {
 
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={updateProgram}
+            onClick={updateCreateProgram}
           >
             Save Program
           </button>

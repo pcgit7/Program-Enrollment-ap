@@ -42,8 +42,9 @@ const UserLogin = async (req, res) => {
   try {
     const user = await User.findOne({
       where: {
-        email: req.body.email,
+        email: req.body.email
       },
+      attributes: { exclude: ['password'] } 
     });
 
     if (!user) {
@@ -63,7 +64,7 @@ const UserLogin = async (req, res) => {
       });
     }
 
-    const token = jwt.sign({ userId: user.email }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
     res.send({
@@ -82,11 +83,13 @@ const UserLogin = async (req, res) => {
 const AddProgram = async (req, res) => {
   try {
     const user = await User.findOne({
-      email : req.body.email
+      where: {
+        email: req.body.email
+      },
+      attributes: { exclude: ['password'] } 
     });
     
     req.body.userId = user.userId;
-
     const newProgram = await Program.create(req.body);
     res.send({
       success: true,
@@ -104,7 +107,10 @@ const AddProgram = async (req, res) => {
 const GetUserDetails = async (req, res) => {
   try {
     const user = await User.findOne({
-      email : req.body.email
+      where: {
+        email: req.body.email
+      },
+      attributes: { exclude: ['password'] } 
     });
     
     user.password = undefined;
@@ -131,7 +137,6 @@ const GetUserDetails = async (req, res) => {
   }
 };
 
-
 const UpdateProgram = async (req,res) => {
   try {
     const {programId , ...updatedData} = req.body;
@@ -153,7 +158,6 @@ const UpdateProgram = async (req,res) => {
     });
   }
 };
-
 
 const DeleteProgram = async(req,res) => {
   try {

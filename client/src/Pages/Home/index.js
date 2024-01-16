@@ -10,7 +10,7 @@ import { DeleteProgram } from "../../ApiCalls/user";
 const Home = () => {
 
   const [searchKey, setSearchKey] = useState("");
-  const programId = useSelector((state) => state.userReducer.currentProgram.programId);
+  const programId = useSelector((state) => state.userReducer.currentProgram?.programId);
   
   const dispatch = useDispatch();
 

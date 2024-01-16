@@ -16,7 +16,6 @@ const ProtectedRoutes = (props) => {
     try {
       dispatch(ShowLoader());
       const response = await GetUserDetails();
-
       dispatch(HideLoader());
       if (response.success) {
         dispatch(SetUser(response.data.user));
@@ -30,6 +29,12 @@ const ProtectedRoutes = (props) => {
       dispatch(HideLoader());
       navigate("/login");
     }
+  };
+
+  const logout = () => {
+    dispatch(SetAllProgram([]));
+    dispatch(SetUser(null));
+    localStorage.removeItem("token");
   };
 
   useEffect(() => {
@@ -57,19 +62,14 @@ const ProtectedRoutes = (props) => {
         <div className="flex gap-2 text-md items-center bg-white p-2 rounded">
           <i class="ri-shield-user-line text-primary"></i>
 
-          <h1
-            className="underline text-primary cursor-pointer"
-            onClick={() => {
-              navigate("/profile");
-            }}
-          >
+          <h1 className="underline text-primary cursor-pointer">
             {user?.name}
           </h1>
 
           <i
             class="ri-logout-circle-r-line ml-5 text-xl cursor-pointer text-primary"
             onClick={() => {
-              localStorage.removeItem("token");
+              logout();
               navigate("/login");
             }}
           ></i>

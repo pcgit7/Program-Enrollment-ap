@@ -12,12 +12,12 @@ router.post('/login',UserLogin);
 router.get('/get-all-user-programs',authMiddleware,GetUserDetails);
 
 //add new program
-router.post('/add-program',authMiddleware,AddProgram);
+router.post('/add-new-program',authMiddleware,AddProgram);
 
 //update-program
-router.post('/update-program',UpdateProgram);
+router.post('/update-program',authMiddleware,UpdateProgram);
 
 //delete program
-router.post('/delete-program',DeleteProgram);
+router.post('/delete-program',authMiddleware,DeleteProgram);
 
 module.exports = router;
