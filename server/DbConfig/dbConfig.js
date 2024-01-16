@@ -1,12 +1,8 @@
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize(process.env.POSTGRES_URL, {
-  dialect: 'postgres',
-  protocol: 'postgres',
-  dialectOptions: {
-    ssl: true,
-  },
-  logging: true, 
+const sequelize = new Sequelize("program-registration", "postgres", "123456", {
+  host: "localhost",
+  dialect: "postgres",
 });
 
 const connection = async () => {

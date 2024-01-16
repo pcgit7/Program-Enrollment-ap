@@ -1,6 +1,6 @@
 import axiosInstance from ".";
 
-const baseUrl = 'http://localhost:5000';
+const baseUrl = 'https://program-enrollment-backend.onrender.com';
 
 export const RegisterUser = async (data) => {
     try 
