@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { UpdateProgram } from "../ApiCalls/user";
 import { ShowLoader , HideLoader } from '../Redux/loaderSlice';
 import toast from "react-hot-toast";
+import { CreateProgram, UpdateProgram } from "../ApiCalls/user";
 
 const ProgramForm = ({deleteProgram ,program}) => {
 
@@ -10,11 +10,18 @@ const ProgramForm = ({deleteProgram ,program}) => {
   const [formData, setFormData] = useState(program || '') ;
   const dispatch = useDispatch();
 
-  const updateProgram = async () => {
+  const updateCreateProgram = async () => {
     try 
     {
       dispatch(ShowLoader());
-      const response = await UpdateProgram(formData);
+      let response = '';
+      if(!currentProgram){
+        response = await CreateProgram(formData);
+      }
+      else{
+        response = await UpdateProgram(formData);
+      }
+      
       dispatch(HideLoader());
       if(response.success){
         toast.success(response.message);
@@ -29,6 +36,7 @@ const ProgramForm = ({deleteProgram ,program}) => {
       toast.error(error.message);
     }
   };
+
 
   useEffect( () => {
     setFormData(program);
@@ -60,7 +68,7 @@ const ProgramForm = ({deleteProgram ,program}) => {
             </label>
             <input
               className="appearance-none block w-[300px] bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 "
-              id="programPrice"
+              id="price"
               type="text"
               placeholder="Enter price"
               value={formData?.price || ''}
@@ -85,14 +93,14 @@ const ProgramForm = ({deleteProgram ,program}) => {
           <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0 ml-20">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="programDomain"
+              htmlFor="domain"
             >
              <span className="text-red-500">*</span>Domain
             </label>
             <select
               className="block w-[300px] bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="domain"
-              value={formData?.domain}
+              value={formData?.domain || 'domain'}
               onChange={handleChange}
             >
               <option value="" disabled>
@@ -237,7 +245,7 @@ const ProgramForm = ({deleteProgram ,program}) => {
             <select
               className="block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="certificateDiploma"
-              value={formData?.certificateDiploma || ''}
+              value={formData?.certificateDiploma || 'select-domain'}
               onChange={handleChange}
             >
               <option value="" disabled>
@@ -329,7 +337,7 @@ const ProgramForm = ({deleteProgram ,program}) => {
 
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={updateProgram}
+            onClick={updateCreateProgram}
           >
             Save Program
           </button>
@@ -340,3 +348,4 @@ const ProgramForm = ({deleteProgram ,program}) => {
 };
 
 export default ProgramForm;
+

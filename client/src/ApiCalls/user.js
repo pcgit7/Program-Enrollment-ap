@@ -35,6 +35,7 @@ export const GetUserDetails = async () => {
 export const CreateProgram = async (data) => {
     try 
     {
+        console.log(data);
         const response = await axiosInstance.post(`${baseUrl}/api/user/add-new-program`,data);
         return response.data;
     } catch (error) {
